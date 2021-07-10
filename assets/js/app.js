@@ -21,7 +21,53 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
   // 3.- Import data 
+  // Data available on CVS: id,state,abbr,poverty,povertyMoe,age,ageMoe,income,incomeMoe,
+  // healthcare,healthcareLow,healthcareHigh,obesity,obesityLow,obesityHigh,
+  // smokes,smokesLow,smokesHigh,-0.385218228
 
-  d3.csv("assets/data/data.csv").then(function(data) {
+  d3.csv("assets/data/data.csv").then(function(journalismData) {
+    journalismData.forEach(function(data) {
+    data.poverty = +data.poverty;
+    data.healthcare = +data.healthcare;
+    data.smokes = +data.smokes;
+    data.age = +data.age;
     console.log(data);
   });
+
+
+    // 4.- Scales, both are linear 
+    
+    var xLinearScale = d3.scaleLinear()
+    .domain([d3.min(journalismData, d => d.poverty),d3.max(journalismData, d => d.poverty)])
+    .range([0, width]);
+
+    var yLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(journalismData, d => d.healthcare)])
+    .range([height, 0]);
+
+    // 5.- Axis 
+
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+
+    // 6.- Axis into SVG area 
+    chartGroup.append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(bottomAxis);
+
+    chartGroup.append("g")
+    .call(leftAxis);
+
+    // 7.- Append circles and bind data 
+    var circlesGroup = chartGroup.selectAll("circle")
+    .data(journalismData)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xLinearScale(d.poverty))
+    .attr("cy", d => yLinearScale(d.healthcare))
+    .attr("r", "15")
+    .attr("fill", "steelblue")
+    .attr("opacity", ".5");
+
+    // 8.- Append Axis titles  
+});
