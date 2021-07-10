@@ -42,7 +42,7 @@ var chartGroup = svg.append("g")
     .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(journalismData, d => d.healthcare)])
+    .domain([d3.min(journalismData, d => d.healthcare),d3.max(journalismData, d =>d.healthcare)])
     .range([height, 0]);
 
     // 5.- Axis 
@@ -70,4 +70,14 @@ var chartGroup = svg.append("g")
     .attr("opacity", ".5");
 
     // 8.- Append Axis titles  
+    chartGroup.append("text")
+    .attr("transform", `translate(${height / 2}, ${height + margin.top + 20})`)
+      .classed("dow-text text", true)
+      .text("In Poverty (%)");
+
+      chartGroup.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left + 10)
+      .attr("x", 0 - (height / 2))
+      .text("Lacks Healthcare (%)");
 });
