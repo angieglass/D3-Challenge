@@ -83,7 +83,7 @@ var chartGroup = svg.append("g")
       .attr("x", 0 - (height / 2))
       .text("Lacks Healthcare (%)");
 
-    // 9. Add text to circles 
+    // 9. Add text to circles. Found it on Stackoverflow. 
     var circleLabels = chartGroup.selectAll(null).data(journalismData).enter().append("text");
 
     circleLabels
